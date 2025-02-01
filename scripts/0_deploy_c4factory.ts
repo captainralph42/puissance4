@@ -7,7 +7,7 @@ const deployC4factory: DeployFunction = async (
   const c4factory = await deployer.deployContract(C4factory, {
 
     initialFields: {
-      templateId: 'a25bb631b6fc48f1c2a94bb00ac81dfd4e3ad9f6c32610503851deee21b92d00',
+      templateId: 'a37e42be665b52dc11ea16dbd1e25dba52591b82d913cf662e806cabdc4a9000',
       totalGames: 0n,
     }
   })

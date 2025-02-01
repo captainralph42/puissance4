@@ -1,22 +1,21 @@
 // app/layout.tsx
+'use client'
+
 import './globals.css'
 import { AlephiumWalletProvider } from '@alephium/web3-react'
-import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'Puissance4 on Alephium',
-  description: '...',
-}
+import { NodeProvider, web3 } from '@alephium/web3'
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+const localNodeUrl = 'http://localhost:22973'
+
+const nodeProvider = new NodeProvider(localNodeUrl)
+web3.setCurrentNodeProvider(nodeProvider)
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <AlephiumWalletProvider network={'testnet'} >
+        <AlephiumWalletProvider network={'devnet'} >
           {children}
         </AlephiumWalletProvider>
       </body>

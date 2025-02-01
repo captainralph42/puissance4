@@ -1,4 +1,3 @@
-// app/api/games/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabaseClient'
 

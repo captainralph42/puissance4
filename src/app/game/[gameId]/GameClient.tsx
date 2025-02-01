@@ -20,80 +20,33 @@ type Move = {
   column_played: number
 }
 
-export default function GameClient({
-  initialGame,
-  initialMoves
-}: {
-  initialGame: Game
-  initialMoves: Move[]
-}) {
+export default function GameClient({ initialGame, initialMoves }: { initialGame: Game; initialMoves: Move[] }) {
   const [game, setGame] = useState<Game>(initialGame)
   const [moves, setMoves] = useState<Move[]>(initialMoves)
   const [column, setColumn] = useState(0)
   const [error, setError] = useState<string | null>(null)
-
-  // Hook Alephium
   const { account } = useWallet()
 
-  // -----------------------------------
-  // 1) Realtime subscription
-  // -----------------------------------
   useEffect(() => {
-    // -- Channel pour la table 'games' --
-    const gamesChannel = supabase
-      .channel('games-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'games',
-          filter: `id=eq.${game.id}`
-        },
-        (payload) => {
-          // payload.new contient la row mise à jour
-          console.log('games-changes:', payload)
-          if (payload.new) {
-            setGame((prev) => ({ ...prev, ...payload.new }))
-          }
-        }
-      )
-      .subscribe()
+    const gamesChannel = supabase.channel('games-changes').on('postgres_changes', { event: '*', schema: 'public', table: 'games', filter: `id=eq.${game.id}` }, (payload) => {
+      if (payload.new) {
+        setGame((prev) => ({ ...prev, ...payload.new }))
+      }
+    }).subscribe()
 
-    // -- Channel pour la table 'moves' --
-    const movesChannel = supabase
-      .channel('moves-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'moves',
-          filter: `game_id=eq.${game.id}`
-        },
-        (payload) => {
-          console.log('moves-changes:', payload)
-          // on peut re-fetch la liste complète, ou juste insérer localement
-          if (payload.eventType === 'INSERT') {
-            // payload.new => le nouveau move
-            const newMove = payload.new as Move
-            setMoves((prev) => [...prev, newMove].sort((a,b) => a.move_number - b.move_number))
-          }
-          // si besoin de gérer un update ou delete, c'est ici
-        }
-      )
-      .subscribe()
+    const movesChannel = supabase.channel('moves-changes').on('postgres_changes', { event: '*', schema: 'public', table: 'moves', filter: `game_id=eq.${game.id}` }, (payload) => {
+      if (payload.eventType === 'INSERT') {
+        const newMove = payload.new as Move
+        setMoves((prev) => [...prev, newMove].sort((a, b) => a.move_number - b.move_number))
+      }
+    }).subscribe()
 
-    // Cleanup on unmount
     return () => {
       supabase.removeChannel(gamesChannel)
       supabase.removeChannel(movesChannel)
     }
   }, [game.id])
 
-  // -----------------------------------
-  // 2) Join as player2
-  // -----------------------------------
   const joinAsPlayer2 = async () => {
     if (!account) {
       setError('Connect your wallet first')
@@ -116,9 +69,6 @@ export default function GameClient({
     }
   }
 
-  // -----------------------------------
-  // 3) Play move
-  // -----------------------------------
   const playMove = async () => {
     setError(null)
     if (!account) {
@@ -129,17 +79,12 @@ export default function GameClient({
       const res = await fetch(`/api/games/${game.id}/play-move`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          player: account.address,
-          columnPlayed: column
-        })
+        body: JSON.stringify({ player: account.address, columnPlayed: column })
       })
       const data = await res.json()
       if (!res.ok) {
         throw new Error(data.error)
       }
-      // Normalement, on n’a pas besoin de setMoves() => on reçoit un event Realtime
-      // Mais on peut mettre à jour localement pour être plus réactif
       setMoves(data.allMoves)
       setGame(data.game)
     } catch (err: any) {
@@ -147,16 +92,10 @@ export default function GameClient({
     }
   }
 
-  // -----------------------------------
-  // 4) Construire le plateau 6x7
-  // -----------------------------------
   const board = useMemo(() => {
     const rows = 6
     const cols = 7
-    const emptyBoard: string[][] = Array.from({ length: rows }, () =>
-      Array(cols).fill('')
-    )
-
+    const emptyBoard: string[][] = Array.from({ length: rows }, () => Array(cols).fill(''))
     for (const move of moves) {
       const col = move.column_played
       for (let row = rows - 1; row >= 0; row--) {
@@ -176,58 +115,32 @@ export default function GameClient({
     return ''
   }
 
-  // -----------------------------------
-  // RENDU
-  // -----------------------------------
   return (
     <div>
       <AlephiumConnectButton />
       Wallet: {account ? account.address : 'non connecté'}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
       <p>Status: {game.status}</p>
       <p>Player1: {game.player1}</p>
       <p>Player2: {game.player2 || '(pas encore de joueur2)'} </p>
       {game.winner && <p>Winner: {game.winner}</p>}
-
-      {/* JOIN si besoin */}
-      {game.status === 'WAITING_FOR_PLAYER2' && !game.player2 && (
-        <button onClick={joinAsPlayer2}>Join as Player2</button>
-      )}
-
-      {/* Jouer un coup si IN_PROGRESS */}
+      {game.status === 'WAITING_FOR_PLAYER2' && !game.player2 && <button onClick={joinAsPlayer2}>Join as Player2</button>}
       {game.status === 'IN_PROGRESS' && (
-        <div style={{ marginBottom: '1em' }}>
+        <div>
           <label>
-            Col (0–6) :{' '}
-            <input
-              type="number"
-              min={0}
-              max={6}
-              value={column}
-              onChange={(e) => setColumn(Number(e.target.value))}
-            />
+            Col (0–6) : <input type="number" min={0} max={6} value={column} onChange={(e) => setColumn(Number(e.target.value))} />
           </label>
           <button onClick={playMove}>Play Move</button>
         </div>
       )}
-
-      {/* Affichage du plateau */}
       <div className={styles.boardContainer}>
         {board.map((row, rowIndex) =>
           row.map((cellValue, colIndex) => {
             const cellClass = getCellClass(cellValue)
-            return (
-              <div
-                key={`${rowIndex}-${colIndex}`}
-                className={`${styles.cell} ${cellClass}`}
-              />
-            )
+            return <div key={`${rowIndex}-${colIndex}`} className={`${styles.cell} ${cellClass}`} />
           })
         )}
       </div>
-
-      {/* Historique moves */}
       <ul>
         {moves.map((m) => (
           <li key={m.id}>

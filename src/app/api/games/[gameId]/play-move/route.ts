@@ -1,10 +1,7 @@
-// app/api/games/[gameId]/play-move/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabaseClient'
 import { checkVictory } from '@/utils/checkVictory'
 
-// POST /api/games/[gameId]/play-move
-// Body : { player: string, columnPlayed: number }
 export async function POST(
   req: NextRequest,
   { params }: { params: { gameId: string } }
@@ -13,7 +10,6 @@ export async function POST(
     const { gameId } = params
     const { player, columnPlayed } = await req.json()
 
-    // 1) Vérifier la game
     const { data: gameData, error: gameError } = await supabase
       .from('games')
       .select('*')
@@ -30,7 +26,6 @@ export async function POST(
       )
     }
 
-    // 2) Déterminer le prochain move_number
     const { data: lastMove } = await supabase
       .from('moves')
       .select('move_number')
@@ -41,9 +36,6 @@ export async function POST(
 
     const nextMoveNumber = lastMove ? lastMove.move_number + 1 : 1
 
-    // **NOUVEAU** : Forcer le tour
-    // On considère que si nextMoveNumber est impair => player1
-    //              si nextMoveNumber est pair  => player2
     if (nextMoveNumber % 2 === 1 && player !== gameData.player1) {
       return NextResponse.json(
         { error: 'It is player1’s turn!' },
@@ -57,7 +49,6 @@ export async function POST(
       )
     }
 
-    // 3) Insérer le move
     const { data: insertedMove, error: moveError } = await supabase
       .from('moves')
       .insert({
@@ -73,7 +64,6 @@ export async function POST(
       return NextResponse.json({ error: moveError?.message }, { status: 400 })
     }
 
-    // 4) Récupérer tous les moves => checkVictory
     const { data: allMoves } = await supabase
       .from('moves')
       .select('*')
@@ -83,7 +73,6 @@ export async function POST(
     const winner = checkVictory(allMoves || [])
     let updatedGame = gameData
 
-    // 5) Si winner => update games
     if (winner) {
       const { data: updated, error: updateError } = await supabase
         .from('games')

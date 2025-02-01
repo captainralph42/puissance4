@@ -1,7 +1,6 @@
 export type Move = {
     column_played: number
     player: string
-    // ... le reste
   }
   
   export function checkVictory(moves: Move[]): string | null {
@@ -14,9 +13,7 @@ export type Move = {
       Array(COLS).fill(null)
     )
   
-    // Pour chaque move dans l'ordre :
-    // On "empile" le pion dans la bonne ligne
-    // (i.e. la première ligne libre en partant du bas).
+
     moves.forEach(move => {
       const col = move.column_played
       // Trouver la première ligne libre
@@ -28,7 +25,6 @@ export type Move = {
       }
     })
   
-    // Vérifier 4 alignés...
     // 1) Horizontale
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS - 3; c++) {
@@ -79,7 +75,7 @@ export type Move = {
       }
     }
   
-    // Pas de gagnant
+    // No gagnant
     return null
   }
   

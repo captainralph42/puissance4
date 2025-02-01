@@ -1,4 +1,3 @@
-/* app/game/[gameId]/GameClient.module.css */
 .boardContainer {
     display: grid;
     grid-template-columns: repeat(7, 50px);

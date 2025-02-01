@@ -19,7 +19,7 @@ TxScript CreateC4Game(
   
     let c4factory = C4factory(factoryId)
   
-    let newGameId = c4factory.createGame{callerAddress!() -> ALPH : minimalContractDeposit!()}(
+    let newGameId = c4factory.createGame{callerAddress!() -> ALPH : minimalContractDeposit!() * 2}(
       encodedImmFields,
       encodedMutFields
     )

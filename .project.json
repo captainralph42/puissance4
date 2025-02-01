@@ -13,9 +13,9 @@
   "infos": {
     "C4Template": {
       "sourceFile": "c4template.ral",
-      "sourceCodeHash": "5eb0ac347e462b0437230c89c3ce642d5fe9ddc382540d1bf5a428ed2ee0af76",
+      "sourceCodeHash": "cdbec486c98b89c9fb1fa1ca9715e09a81103877164fb6ca216a40b9d5015f45",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "04dc3fc6a0a48977cdeaf075aa3a83817b91ff268aa0121a639c3cbde4354d10"
+      "codeHashDebug": "8bb77c630e806f3251c867cc75e9a38c02a47fce6d466610fb5093e1acc0db31"
     },
     "C4factory": {
       "sourceFile": "c4factory.ral",
@@ -25,7 +25,7 @@
     },
     "CreateC4Game": {
       "sourceFile": "createNewGame.ral",
-      "sourceCodeHash": "3cc34407f5c5b66f333a3ac00a7f152ea134fa7f1b9f6f1ce205ff25342e46ac",
+      "sourceCodeHash": "e5d5b2895cf651c88d4eb4fba8a8ce2ad74d8a3b944fd654259d248a7458a7d8",
       "bytecodeDebugPatch": "",
       "codeHashDebug": ""
     }

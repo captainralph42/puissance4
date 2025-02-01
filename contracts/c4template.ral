@@ -1,6 +1,6 @@
 Contract C4Template(
     player1: Address,
-    betAmount: U256,
+    mut betAmount: U256,
     mut player2: Address,
     mut winner: Address,
     mut isFinished: Bool
@@ -20,6 +20,14 @@ Contract C4Template(
       GameNotFinished = 7
     }
   
+
+    @using(preapprovedAssets = true, updateFields = true, assetsInContract = enforced, checkExternalCaller = false)
+    pub fn addBetAmount(caller: Address, amount: U256) -> () {
+      assert!(caller == player1, ErrorCodes.AccessDenied)
+      assert!(player2 == nullContractAddress!(), ErrorCodes.Player2AlreadyJoined)
+      
+      betAmount = betAmount + amount
+    }
   
     @using(preapprovedAssets = true, updateFields = true, assetsInContract = enforced, checkExternalCaller = false)
     pub fn joinGame(caller: Address, amount: U256) -> () {

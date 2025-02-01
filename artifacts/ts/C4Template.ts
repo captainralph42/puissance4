@@ -53,6 +53,10 @@ export namespace C4TemplateTypes {
   export type PrizeClaimedEvent = ContractEvent<{ winner: Address }>;
 
   export interface CallMethodTable {
+    addBetAmount: {
+      params: CallContractParams<{ caller: Address; amount: bigint }>;
+      result: CallContractResult<null>;
+    };
     joinGame: {
       params: CallContractParams<{ caller: Address; amount: bigint }>;
       result: CallContractResult<null>;
@@ -87,6 +91,13 @@ export namespace C4TemplateTypes {
   };
 
   export interface SignExecuteMethodTable {
+    addBetAmount: {
+      params: SignExecuteContractMethodParams<{
+        caller: Address;
+        amount: bigint;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
     joinGame: {
       params: SignExecuteContractMethodParams<{
         caller: Address;
@@ -146,6 +157,14 @@ class Factory extends ContractFactory<
   }
 
   tests = {
+    addBetAmount: async (
+      params: TestContractParamsWithoutMaps<
+        C4TemplateTypes.Fields,
+        { caller: Address; amount: bigint }
+      >
+    ): Promise<TestContractResultWithoutMaps<null>> => {
+      return testMethod(this, "addBetAmount", params, getContractByCodeHash);
+    },
     joinGame: async (
       params: TestContractParamsWithoutMaps<
         C4TemplateTypes.Fields,
@@ -194,7 +213,7 @@ export const C4Template = new Factory(
   Contract.fromJson(
     C4TemplateContractJson,
     "",
-    "04dc3fc6a0a48977cdeaf075aa3a83817b91ff268aa0121a639c3cbde4354d10",
+    "8bb77c630e806f3251c867cc75e9a38c02a47fce6d466610fb5093e1acc0db31",
     []
   )
 );
@@ -270,6 +289,17 @@ export class C4TemplateInstance extends ContractInstance {
   }
 
   view = {
+    addBetAmount: async (
+      params: C4TemplateTypes.CallMethodParams<"addBetAmount">
+    ): Promise<C4TemplateTypes.CallMethodResult<"addBetAmount">> => {
+      return callMethod(
+        C4Template,
+        this,
+        "addBetAmount",
+        params,
+        getContractByCodeHash
+      );
+    },
     joinGame: async (
       params: C4TemplateTypes.CallMethodParams<"joinGame">
     ): Promise<C4TemplateTypes.CallMethodResult<"joinGame">> => {
@@ -317,6 +347,11 @@ export class C4TemplateInstance extends ContractInstance {
   };
 
   transact = {
+    addBetAmount: async (
+      params: C4TemplateTypes.SignExecuteMethodParams<"addBetAmount">
+    ): Promise<C4TemplateTypes.SignExecuteMethodResult<"addBetAmount">> => {
+      return signExecuteMethod(C4Template, this, "addBetAmount", params);
+    },
     joinGame: async (
       params: C4TemplateTypes.SignExecuteMethodParams<"joinGame">
     ): Promise<C4TemplateTypes.SignExecuteMethodResult<"joinGame">> => {
