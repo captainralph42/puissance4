@@ -1,0 +1,175 @@
+{
+  "version": "v3.11.1",
+  "name": "C4Template",
+  "bytecode": "0504402a406740b340e0010102020017d325cda2c0a002190d7ba000ca450e7b1601ce012f0f7b1600a1001600ce01a90516005e01010202004023d3e2e5fae91600ce00451600a000451b13067ba002190d7ba000ca46107b1601ce00451601a000451b117b03a1021601a10106a0015e01010104004027d318189532a002190d7ba000ca46107b1600ce00451600a000451b13067b03a102ce010e2c170113c3038d7ea4c680001702160116022b0e2d1703ce001603a8a0001603a8010101010013d3f5de35e8a00213077b1600a0014513067ba001ce010e2c13c3038d7ea4c680002ba807a0015e",
+  "codeHash": "04dc3fc6a0a48977cdeaf075aa3a83817b91ff268aa0121a639c3cbde4354d10",
+  "fieldsSig": {
+    "names": [
+      "player1",
+      "betAmount",
+      "player2",
+      "winner",
+      "isFinished"
+    ],
+    "types": [
+      "Address",
+      "U256",
+      "Address",
+      "Address",
+      "Bool"
+    ],
+    "isMutable": [
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "eventsSig": [
+    {
+      "name": "GameJoined",
+      "fieldNames": [
+        "player"
+      ],
+      "fieldTypes": [
+        "Address"
+      ]
+    },
+    {
+      "name": "GameResolved",
+      "fieldNames": [
+        "winner"
+      ],
+      "fieldTypes": [
+        "Address"
+      ]
+    },
+    {
+      "name": "PrizeClaimed",
+      "fieldNames": [
+        "winner"
+      ],
+      "fieldTypes": [
+        "Address"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "joinGame",
+      "paramNames": [
+        "caller",
+        "amount"
+      ],
+      "paramTypes": [
+        "Address",
+        "U256"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "setWinner",
+      "paramNames": [
+        "caller",
+        "declaredWinner"
+      ],
+      "paramTypes": [
+        "Address",
+        "Address"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "setDraw",
+      "paramNames": [
+        "caller"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "claimPrize",
+      "paramNames": [
+        "caller"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCodes",
+      "fields": [
+        {
+          "name": "GameAlreadyFinished",
+          "value": {
+            "type": "U256",
+            "value": "1"
+          }
+        },
+        {
+          "name": "Player2AlreadyJoined",
+          "value": {
+            "type": "U256",
+            "value": "2"
+          }
+        },
+        {
+          "name": "InsufficientBet",
+          "value": {
+            "type": "U256",
+            "value": "3"
+          }
+        },
+        {
+          "name": "NotJoinedYet",
+          "value": {
+            "type": "U256",
+            "value": "4"
+          }
+        },
+        {
+          "name": "InvalidWinner",
+          "value": {
+            "type": "U256",
+            "value": "5"
+          }
+        },
+        {
+          "name": "AccessDenied",
+          "value": {
+            "type": "U256",
+            "value": "6"
+          }
+        },
+        {
+          "name": "GameNotFinished",
+          "value": {
+            "type": "U256",
+            "value": "7"
+          }
+        }
+      ]
+    }
+  ]
+}

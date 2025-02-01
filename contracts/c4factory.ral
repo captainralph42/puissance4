@@ -1,0 +1,34 @@
+Contract C4factory(
+    templateId: ByteVec,
+    mut totalGames: U256
+  ) {
+    mapping[U256, ByteVec] games
+  
+    event NewGameCreated(gameNumber: U256, gameID: ByteVec)
+  
+    @using(preapprovedAssets = true, updateFields = true, assetsInContract = enforced, checkExternalCaller = false)
+    pub fn createGame(
+      encodedImmFields: ByteVec, 
+      encodedMutFields: ByteVec
+    ) -> ByteVec {
+      
+      let newGame = copyCreateContract!{callerAddress!() -> ALPH : minimalContractDeposit!()}(
+        templateId,
+        encodedImmFields,
+        encodedMutFields
+      )
+      totalGames = totalGames + 1
+      games.insert!(callerAddress!(), totalGames, newGame)
+      emit NewGameCreated(totalGames, newGame)
+      return newGame
+    }
+  
+    pub fn getGameId(gameNumber: U256) -> ByteVec {
+      return games[gameNumber]
+    }
+  
+    pub fn contractIdToAddress(contractId: ByteVec) -> Address {
+      return contractIdToAddress!(contractId)
+    }
+  }
+  

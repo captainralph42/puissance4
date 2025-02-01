@@ -1,0 +1,33 @@
+{
+  "fullNodeVersion": "v3.11.1",
+  "compilerOptionsUsed": {
+    "ignoreUnusedConstantsWarnings": false,
+    "ignoreUnusedVariablesWarnings": false,
+    "ignoreUnusedFieldsWarnings": false,
+    "ignoreUnusedPrivateFunctionsWarnings": false,
+    "ignoreUpdateFieldsCheckWarnings": false,
+    "ignoreCheckExternalCallerWarnings": false,
+    "ignoreUnusedFunctionReturnWarnings": false,
+    "skipAbstractContractCheck": false
+  },
+  "infos": {
+    "C4Template": {
+      "sourceFile": "c4template.ral",
+      "sourceCodeHash": "5eb0ac347e462b0437230c89c3ce642d5fe9ddc382540d1bf5a428ed2ee0af76",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "04dc3fc6a0a48977cdeaf075aa3a83817b91ff268aa0121a639c3cbde4354d10"
+    },
+    "C4factory": {
+      "sourceFile": "c4factory.ral",
+      "sourceCodeHash": "df06f943958b38e067376b16480e89ca5124826d946e945f96399cfc72e0640a",
+      "bytecodeDebugPatch": "=6-6+58=3+a4=1+89=11-1+f=84+7a7e0214696e73657274206174206d617020706174683a2000=128",
+      "codeHashDebug": "a11b80fb8f013fb4c3a6a85d9204c04c0d416d8eb1e4fb0fffac7a05eb827699"
+    },
+    "CreateC4Game": {
+      "sourceFile": "createNewGame.ral",
+      "sourceCodeHash": "3cc34407f5c5b66f333a3ac00a7f152ea134fa7f1b9f6f1ce205ff25342e46ac",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": ""
+    }
+  }
+}

@@ -1,0 +1,78 @@
+Contract C4Template(
+    player1: Address,
+    betAmount: U256,
+    mut player2: Address,
+    mut winner: Address,
+    mut isFinished: Bool
+  ) {
+  
+    event GameJoined(player: Address)
+    event GameResolved(winner: Address)
+    event PrizeClaimed(winner: Address)
+
+    enum ErrorCodes {
+      GameAlreadyFinished = 1
+      Player2AlreadyJoined = 2
+      InsufficientBet = 3
+      NotJoinedYet = 4
+      InvalidWinner = 5
+      AccessDenied = 6
+      GameNotFinished = 7
+    }
+  
+  
+    @using(preapprovedAssets = true, updateFields = true, assetsInContract = enforced, checkExternalCaller = false)
+    pub fn joinGame(caller: Address, amount: U256) -> () {
+      assert!(!isFinished, ErrorCodes.GameAlreadyFinished)
+      assert!(player2 == nullContractAddress!(), ErrorCodes.Player2AlreadyJoined)
+      assert!(amount == betAmount, ErrorCodes.InsufficientBet)
+  
+      player2 = caller
+  
+      transferTokenToSelf!(caller, ALPH, betAmount)
+  
+      emit GameJoined(caller)
+    }
+  
+
+    @using(preapprovedAssets = true, updateFields = true, assetsInContract = enforced, checkExternalCaller = false)
+    pub fn setWinner(caller: Address, declaredWinner: Address) -> () {
+      assert!(caller == player1 || caller == player2, ErrorCodes.AccessDenied)
+      assert!(!isFinished, ErrorCodes.GameAlreadyFinished)
+      assert!(player2 != nullContractAddress!(), ErrorCodes.NotJoinedYet)
+      assert!(declaredWinner == player1 || declaredWinner == player2, ErrorCodes.InvalidWinner)
+  
+      isFinished = true
+      winner = declaredWinner
+  
+      emit GameResolved(winner)
+    }
+  
+    @using(preapprovedAssets = true, updateFields = true, assetsInContract = enforced, checkExternalCaller = false)
+    pub fn setDraw(caller: Address) -> () {
+      assert!(!isFinished, ErrorCodes.GameAlreadyFinished)
+      assert!(player2 != nullContractAddress!(), ErrorCodes.NotJoinedYet)
+      assert!(caller == player1 || caller == player2, ErrorCodes.AccessDenied)
+  
+      isFinished = true
+  
+      let total = betAmount * 2
+      let dust = dustAmount!()
+      let halfPrize = (total - dust) / 2
+  
+      transferTokenFromSelf!(player1, ALPH, halfPrize)
+      transferTokenFromSelf!(player2, ALPH, halfPrize)
+  
+    }
+
+    @using(preapprovedAssets = true, assetsInContract = enforced, checkExternalCaller = false)
+    pub fn claimPrize(caller: Address) -> () {
+      assert!(isFinished, ErrorCodes.GameNotFinished)
+      assert!(caller == winner, ErrorCodes.AccessDenied)
+  
+      transferTokenFromSelf!(winner, ALPH, betAmount * 2 - dustAmount!())
+      emit PrizeClaimed(winner)
+    }
+  
+  }
+  

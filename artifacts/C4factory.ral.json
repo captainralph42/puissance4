@@ -1,0 +1,102 @@
+{
+  "version": "v3.8.5",
+  "name": "C4factory",
+  "bytecode": "0203403f4061407001010203011dd356b26e82b4d1a2ce0016001601af1702a0000d2aa100b4d1a2140a5f5f6d61705f5f305f5fa0004044b11602d2010105a00016025f16020201000101010bd3231bac7d0c0d0d140a5f5f6d61705f5f305f5f16004044cb010102010001010104d32e1cbf1e16007702",
+  "codeHash": "86cbbfa18a4f8f706b873a911f957dd9ed7a7cd52ee5918094401c89d3559d11",
+  "fieldsSig": {
+    "names": [
+      "templateId",
+      "totalGames"
+    ],
+    "types": [
+      "ByteVec",
+      "U256"
+    ],
+    "isMutable": [
+      false,
+      true
+    ]
+  },
+  "eventsSig": [
+    {
+      "name": "NewGameCreated",
+      "fieldNames": [
+        "gameNumber",
+        "gameID"
+      ],
+      "fieldTypes": [
+        "U256",
+        "ByteVec"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "createGame",
+      "usePreapprovedAssets": true,
+      "useAssetsInContract": true,
+      "isPublic": true,
+      "paramNames": [
+        "encodedImmFields",
+        "encodedMutFields"
+      ],
+      "paramTypes": [
+        "ByteVec",
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": [
+        "ByteVec"
+      ]
+    },
+    {
+      "name": "getGameId",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [
+        "gameNumber"
+      ],
+      "paramTypes": [
+        "U256"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "ByteVec"
+      ]
+    },
+    {
+      "name": "contractIdToAddress",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [
+        "contractId"
+      ],
+      "paramTypes": [
+        "ByteVec"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "Address"
+      ]
+    }
+  ],
+  "constants": [],
+  "enums": [],
+  "mapsSig": {
+    "names": [
+      "games"
+    ],
+    "types": [
+      "Map[U256,ByteVec]"
+    ]
+  }
+}

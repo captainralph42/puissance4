@@ -1,0 +1,29 @@
+TxScript CreateC4Game(
+    factoryId: ByteVec,
+  
+    player1: Address,
+  
+    betAmount: U256,
+    player2: Address,
+    winner: Address,
+    isFinished: Bool
+  ) {
+
+      let (encodedImmFields, encodedMutFields) = C4Template.encodeFields!(
+      player1,
+      betAmount,
+      player2,
+      winner,
+      isFinished
+    )
+  
+    let c4factory = C4factory(factoryId)
+  
+    let newGameId = c4factory.createGame{callerAddress!() -> ALPH : minimalContractDeposit!()}(
+      encodedImmFields,
+      encodedMutFields
+    )
+  
+    assert!(newGameId != #, 400)
+  }
+  
